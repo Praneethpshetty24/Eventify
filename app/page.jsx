@@ -1,8 +1,22 @@
+"use client"
+import React from "react"
+import Navbar from "../components/Navbar"
+import Hero from "../components/Hero"
+import Features from "../components/Features"
+import Footer from "../components/Footer"
+import BackgroundAnimation from "../components/ui/BackgroundAnimation"
 
-export default function Home() {
+const Home = () => {
   return (
-    <div >
-
+    <div className="min-h-screen bg-white">
+      <BackgroundAnimation />
+      <Navbar />
+      <Hero />
+      <Features />
+      <Footer />
     </div>
-  );
+  )
 }
+
+export default Home
+
