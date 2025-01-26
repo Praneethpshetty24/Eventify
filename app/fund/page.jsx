@@ -8,10 +8,30 @@ import BackgroundAnimation from '@/components/ui/BackgroundAnimation'
 
 function FundPage() {
   const [amount, setAmount] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleFund = () => {
-    // TODO: Implement funding logic
-    console.log('Funding amount:', amount)
+  const handleFund = async () => {
+    if (!amount || amount <= 0) return
+    
+    setLoading(true)
+    try {
+      const response = await fetch('/api/payments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: Number(amount) }),
+      })
+
+      const data = await response.json()
+      
+      if (data.url) {
+        window.location.href = data.url // Redirect to Stripe Checkout
+      }
+    } catch (error) {
+      console.error('Payment error:', error)
+    }
+    setLoading(false)
   }
 
   return (
@@ -51,13 +71,15 @@ function FundPage() {
 
             <button
               onClick={handleFund}
+              disabled={loading}
               className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold 
                 py-4 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-[1.02]
-                hover:from-purple-700 hover:to-indigo-700 shadow-lg hover:shadow-purple-500/25"
+                hover:from-purple-700 hover:to-indigo-700 shadow-lg hover:shadow-purple-500/25
+                disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div className="flex items-center justify-center space-x-2">
                 <MdPayment className="text-xl" />
-                <span>Fund Now</span>
+                <span>{loading ? 'Processing...' : 'Proceed to Payment'}</span>
               </div>
             </button>
 

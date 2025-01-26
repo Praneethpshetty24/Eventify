@@ -16,7 +16,7 @@ function SignIn() {
     try {
       setLoading(true);
       await signInWithPopup(auth, googleProvider);
-      router.push('/');
+      router.push('/home');
     } catch (error) {
       console.error('Error signing in with Google:', error);
     } finally {
