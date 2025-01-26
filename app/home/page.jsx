@@ -5,9 +5,17 @@ import ImpactSection from "./components/ImpactSection"
 import EnrolledEvents from "./components/EnrolledEvents"
 import UpcomingEvents from "./components/UpcomingEvents"
 import Credits from "./components/Credits"
+import { FaChartLine, FaCalendarCheck, FaCalendarAlt, FaCoins } from 'react-icons/fa'
 
 const HomePage = () => {
-  const [activeComponent, setActiveComponent] = useState('impact') // Default view
+  const [activeComponent, setActiveComponent] = useState('impact')
+
+  const navItems = [
+    { id: 'impact', label: 'Impact', icon: FaChartLine },
+    { id: 'enrolled', label: 'Enrolled Events', icon: FaCalendarCheck },
+    { id: 'upcoming', label: 'Upcoming', icon: FaCalendarAlt },
+    { id: 'credits', label: 'Credits', icon: FaCoins },
+  ]
 
   const renderComponent = () => {
     switch (activeComponent) {
@@ -27,53 +35,31 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <DashboardNavbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4">
         {/* Navigation */}
-        <nav className="flex space-x-4 mb-6">
-          <button
-            onClick={() => setActiveComponent('impact')}
-            className={`px-4 py-2 rounded-md ${
-              activeComponent === 'impact'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            Impact
-          </button>
-          <button
-            onClick={() => setActiveComponent('enrolled')}
-            className={`px-4 py-2 rounded-md ${
-              activeComponent === 'enrolled'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            Enrolled Events
-          </button>
-          <button
-            onClick={() => setActiveComponent('upcoming')}
-            className={`px-4 py-2 rounded-md ${
-              activeComponent === 'upcoming'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            Upcoming Events
-          </button>
-          <button
-            onClick={() => setActiveComponent('credits')}
-            className={`px-4 py-2 rounded-md ${
-              activeComponent === 'credits'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            Credits
-          </button>
+        <nav className="flex justify-between mb-6 bg-white rounded-lg p-1 shadow-sm">
+          {navItems.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => setActiveComponent(id)}
+              className={`flex items-center justify-center px-3 py-2 rounded-full text-sm flex-1 mx-1
+                ${activeComponent === id
+                  ? 'bg-violet-600 text-white'
+                  : 'text-gray-600 hover:bg-gray-50'
+                }`}
+            >
+              <Icon className="text-lg sm:mr-2" />
+              <span className="hidden sm:inline">{label}</span>
+              {/* Show shorter text on medium screens */}
+              <span className="hidden xs:inline sm:hidden">
+                {label.split(' ')[0]}
+              </span>
+            </button>
+          ))}
         </nav>
 
         {/* Content Area */}
-        <main>
+        <main className="mt-4">
           {renderComponent()}
         </main>
       </div>
