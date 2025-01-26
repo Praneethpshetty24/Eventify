@@ -1,5 +1,8 @@
 "use client"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from '@/firebase'
+import { useRouter } from 'next/navigation'
 import DashboardNavbar from "./components/DashboardNavbar"
 import ImpactSection from "./components/ImpactSection"
 import EnrolledEvents from "./components/EnrolledEvents"
@@ -9,6 +12,8 @@ import { FaChartLine, FaCalendarCheck, FaCalendarAlt, FaCoins } from 'react-icon
 
 const HomePage = () => {
   const [activeComponent, setActiveComponent] = useState('impact')
+  const [user, loading] = useAuthState(auth)
+  const router = useRouter()
 
   const navItems = [
     { id: 'impact', label: 'Impact', icon: FaChartLine },
@@ -16,6 +21,12 @@ const HomePage = () => {
     { id: 'upcoming', label: 'Upcoming', icon: FaCalendarAlt },
     { id: 'credits', label: 'Credits', icon: FaCoins },
   ]
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/signin')
+    }
+  }, [user, loading, router])
 
   const renderComponent = () => {
     switch (activeComponent) {
@@ -31,6 +42,16 @@ const HomePage = () => {
         return <ImpactSection />
     }
   }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl text-gray-600">Loading...</div>
+      </div>
+    )
+  }
+
+  if (!user) return null
 
   return (
     <div className="min-h-screen bg-black">

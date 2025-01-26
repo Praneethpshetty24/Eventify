@@ -1,8 +1,22 @@
 import React from "react"
 import { motion } from "framer-motion"
 import BackgroundAnimation from "./ui/BackgroundAnimation"
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from '@/firebase'
+import { useRouter } from 'next/navigation'
 
 const Hero = () => {
+  const [user] = useAuthState(auth)
+  const router = useRouter()
+
+  const handleGetStarted = () => {
+    if (user) {
+      router.push('/home')
+    } else {
+      router.push('/signin')
+    }
+  }
+
   return (
     <div className="bg-black py-12 sm:py-16 md:py-20 lg:py-24 relative overflow-hidden">
       <div className="absolute inset-0">
@@ -29,8 +43,9 @@ const Hero = () => {
           className="bg-violet-600 text-white font-bold py-2 px-4 sm:px-6 text-sm sm:text-base rounded-full hover:bg-violet-700 transition duration-300 mt-4"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          onClick={handleGetStarted}
         >
-          Get Started
+          {user ? 'Go to Dashboard' : 'Get Started'}
         </motion.button>
       </div>
     </div>
