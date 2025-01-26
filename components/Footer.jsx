@@ -1,4 +1,5 @@
 import React from "react"
+import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa"
 
 const Footer = () => {
   return (
@@ -33,13 +34,13 @@ const Footer = () => {
             <h4 className="text-base sm:text-lg font-semibold mb-2">Follow Us</h4>
             <div className="flex space-x-4">
               <a href="#" className="text-sm sm:text-base text-gray-400 hover:text-white transition-colors">
-                Facebook
+                <FaFacebook />
               </a>
               <a href="#" className="text-sm sm:text-base text-gray-400 hover:text-white transition-colors">
-                Twitter
+                <FaTwitter />
               </a>
               <a href="#" className="text-sm sm:text-base text-gray-400 hover:text-white transition-colors">
-                Instagram
+                <FaInstagram />
               </a>
             </div>
           </div>
