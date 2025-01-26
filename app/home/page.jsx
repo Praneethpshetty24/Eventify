@@ -7,14 +7,8 @@ import DashboardNavbar from "./components/DashboardNavbar"
 import ImpactSection from "./components/ImpactSection"
 import EnrolledEvents from "./components/EnrolledEvents"
 import UpcomingEvents from "./components/UpcomingEvents"
-import Credits from "./components/Credits"
-import { FaChartLine, FaCalendarCheck, FaCalendarAlt, FaCoins } from 'react-icons/fa'
-import dynamic from 'next/dynamic'
 
-// Dynamically import components that need window access
-const Hero = dynamic(() => import('@/components/Hero'), {
-  ssr: false // This will prevent the component from being server-side rendered
-})
+import { FaChartLine, FaCalendarCheck, FaCalendarAlt, FaCoins } from 'react-icons/fa'
 
 const HomePage = () => {
   const [activeComponent, setActiveComponent] = useState('impact')
@@ -25,7 +19,7 @@ const HomePage = () => {
     { id: 'impact', label: 'Impact', icon: FaChartLine },
     { id: 'enrolled', label: 'Enrolled Events', icon: FaCalendarCheck },
     { id: 'upcoming', label: 'Upcoming', icon: FaCalendarAlt },
-    { id: 'credits', label: 'Credits', icon: FaCoins },
+   
   ]
 
   useEffect(() => {
@@ -87,7 +81,6 @@ const HomePage = () => {
 
         {/* Content Area */}
         <main className="mt-4 text-white">
-          <Hero />
           {renderComponent()}
         </main>
       </div>
