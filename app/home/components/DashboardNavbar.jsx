@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FaBell, FaUser } from "react-icons/fa";
+import { FaBell, FaUser, FaPlus } from "react-icons/fa";
 
 const DashboardNavbar = () => {
   return (
@@ -16,8 +16,10 @@ const DashboardNavbar = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               className="p-1.5 sm:p-2 text-gray-600 hover:text-violet-600"
+              onClick={() => window.location.href = '/register'}
+              title="Add your event"
             >
-              <FaBell className="text-lg sm:text-xl" />
+              <FaPlus className="text-lg sm:text-xl" />
             </motion.button>
             
             <motion.div
