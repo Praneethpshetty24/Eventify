@@ -6,7 +6,7 @@ import Features from "../components/Features"
 import Footer from "../components/Footer"
 import BackgroundAnimation from "../components/ui/BackgroundAnimation"
 
-const Home = () => {
+const LandingPage = () => {
   return (
     <div className="min-h-screen bg-white">
       <BackgroundAnimation />
@@ -18,5 +18,5 @@ const Home = () => {
   )
 }
 
-export default Home
+export default LandingPage
 
