@@ -4,10 +4,15 @@ import { FaCalendar } from "react-icons/fa"
 
 const Navbar = () => {
   return (
-    <motion.nav className="bg-white shadow-md fixed top-0 left-0 w-full z-50" initial={{ y: -100 }} animate={{ y: 0 }} transition={{ duration: 0.5 }}>
+    <motion.nav 
+      className="bg-gray-900 shadow-md fixed top-0 left-0 w-full z-50" 
+      initial={{ y: -100 }} 
+      animate={{ y: 0 }} 
+      transition={{ duration: 0.5 }}
+    >
       <div className="container mx-auto px-4 sm:px-6 py-2 sm:py-3 flex justify-between items-center">
         <motion.div
-          className="flex items-center space-x-2 text-xl sm:text-2xl font-bold text-black"
+          className="flex items-center space-x-2 text-xl sm:text-2xl font-bold text-white"
           whileHover={{ scale: 1.1 }}
         >
           <FaCalendar className="text-violet-600" />

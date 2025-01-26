@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { CheckCircle } from 'lucide-react'
-import  BackgroundAnimation from '@/components/ui/BackgroundAnimation'
+import BackgroundAnimation from '@/components/ui/BackgroundAnimation'
 
 export default function PaymentSuccess() {
   const router = useRouter()
@@ -18,8 +18,8 @@ export default function PaymentSuccess() {
   }, [router])
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center relative overflow-hidden">
-      <BackgroundAnimation className="brightness-125" />
+    <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center relative overflow-hidden">
+      <BackgroundAnimation className="opacity-30" />
       <div className="relative z-10 text-center">
         <motion.div
           initial={{ scale: 0 }}
@@ -31,7 +31,7 @@ export default function PaymentSuccess() {
           }}
           className="flex justify-center"
         >
-          <CheckCircle className="w-24 h-24 text-emerald-500" />
+          <CheckCircle className="w-24 h-24 text-purple-500" />
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -39,15 +39,20 @@ export default function PaymentSuccess() {
           transition={{ delay: 0.2 }}
           className="mt-6"
         >
-          <h1 className="text-3xl font-bold text-black mb-2">
-             Successful!
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Registration Successful!
           </h1>
-         
+          <p className="text-gray-400 mb-4">
+            You're all set for the event
+          </p>
+          <p className="text-gray-500 text-sm">
+            Redirecting to Home page...
+          </p>
           <motion.div
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 2, ease: "linear" }}
-            className="h-1 bg-emerald-500 mt-8 rounded-full"
+            className="h-1 bg-gradient-to-r from-purple-600 to-indigo-600 mt-8 rounded-full"
           />
         </motion.div>
       </div>

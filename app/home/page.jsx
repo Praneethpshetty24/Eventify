@@ -33,11 +33,11 @@ const HomePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-black">
       <DashboardNavbar />
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4">
         {/* Navigation */}
-        <nav className="flex justify-between mb-6 bg-white rounded-lg p-1 shadow-sm">
+        <nav className="flex justify-between mb-6 bg-gray-900 rounded-lg p-1 shadow-sm">
           {navItems.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -45,7 +45,7 @@ const HomePage = () => {
               className={`flex items-center justify-center px-3 py-2 rounded-full text-sm flex-1 mx-1
                 ${activeComponent === id
                   ? 'bg-violet-600 text-white'
-                  : 'text-gray-600 hover:bg-gray-50'
+                  : 'text-gray-300 hover:bg-gray-800'
                 }`}
             >
               <Icon className="text-lg sm:mr-2" />
@@ -59,7 +59,7 @@ const HomePage = () => {
         </nav>
 
         {/* Content Area */}
-        <main className="mt-4">
+        <main className="mt-4 text-white">
           {renderComponent()}
         </main>
       </div>
