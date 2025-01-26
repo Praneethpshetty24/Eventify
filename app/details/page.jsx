@@ -1,26 +1,44 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaCalendarAlt, FaUsers, FaMapMarkerAlt, FaRegClock } from 'react-icons/fa'
 import { MdDescription, MdGroups } from 'react-icons/md'
 import { IoTimeOutline, IoLocationOutline } from 'react-icons/io5'
 import { BsPersonCircle } from 'react-icons/bs'
 import Link from 'next/link'
 import BackgroundAnimation from '@/components/ui/BackgroundAnimation'
+import { useSearchParams } from 'next/navigation'
 
 export default function EventDetails() {
-  // This would typically come from your database or state management
-  const eventDetails = {
-    eventName: "Tree Planting Drive",
-    description: "Join us for a community tree planting initiative aimed at creating a greener and more sustainable environment. Together, we'll plant native species that support local biodiversity.",
-    imageUrl: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80",
-    requiredMembers: 25,
-    startDate: "2024-02-15",
-    endDate: "2024-02-15",
-    organizer: "Green Earth Initiative",
-    location: "Central Park, New York",
-    duration: "4 hours",
-    time: "9:00 AM - 1:00 PM"
-  }
+  const searchParams = useSearchParams();
+  const [eventDetails, setEventDetails] = useState({
+    eventName: "",
+    description: "",
+    imageUrl: "",
+    requiredMembers: 0,
+    startDate: "",
+    endDate: "",
+    organizer: "",
+    location: "",
+    duration: "",
+    time: "",
+  });
+
+  useEffect(() => {
+    // Get event details from URL parameters
+    const details = {
+      eventName: searchParams.get('eventName') || "",
+      description: searchParams.get('description') || "",
+      imageUrl: searchParams.get('imageUrl') || "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?ixlib=rb-1.2.1&auto=format&fit=crop&w=2070&q=80",
+      requiredMembers: parseInt(searchParams.get('requiredMembers')) || 0,
+      startDate: searchParams.get('startDate') || "",
+      endDate: searchParams.get('endDate') || "",
+      organizer: searchParams.get('organizer') || "",
+      location: searchParams.get('location') || "",
+      duration: searchParams.get('duration') || "",
+      time: searchParams.get('time') || "",
+    };
+    setEventDetails(details);
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] text-white py-8">

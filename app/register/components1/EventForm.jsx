@@ -8,9 +8,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format } from "date-fns"
 import { FaIdCard, FaUsers, FaCalendarAlt, FaImage } from "react-icons/fa"
 import { MdEventAvailable, MdDescription } from "react-icons/md"
-import { IoSendSharp } from "react-icons/io5"
+import { IoSendSharp, IoLocationOutline } from "react-icons/io5"
+import { BsClock, BsPersonCircle } from "react-icons/bs"
+import { FaRegClock } from "react-icons/fa"
+import { db } from "@/firebase"
+import { collection, addDoc } from "firebase/firestore"
+import { useRouter } from "next/navigation"
 
 export default function EventForm() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     panNumber: "",
     eventName: "",
@@ -19,6 +25,10 @@ export default function EventForm() {
     requiredMembers: 1,
     startDate: null,
     endDate: null,
+    organizer: "",
+    location: "",
+    duration: "",
+    time: "",
   })
 
   const [errors, setErrors] = useState({})
@@ -43,14 +53,36 @@ export default function EventForm() {
     if (!formData.endDate) {
       newErrors.endDate = "End date is required"
     }
+    if (!formData.location) {
+      newErrors.location = "Location is required"
+    }
+    if (!formData.organizer) {
+      newErrors.organizer = "Organizer name is required"
+    }
+    if (!formData.time) {
+      newErrors.time = "Event time is required"
+    }
+    if (!formData.duration) {
+      newErrors.duration = "Duration is required"
+    }
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (validateForm()) {
-      console.log(formData)
+    if (!validateForm()) return
+
+    try {
+      await addDoc(collection(db, "events"), {
+        ...formData,
+        createdAt: new Date(),
+        startDate: formData.startDate.toISOString(),
+        endDate: formData.endDate.toISOString(),
+      })
+      router.push("/")
+    } catch (error) {
+      console.error("Error adding event: ", error)
     }
   }
 
@@ -212,6 +244,74 @@ export default function EventForm() {
             </PopoverContent>
           </Popover>
           {errors.endDate && <p className="text-sm text-red-400">{errors.endDate}</p>}
+        </div>
+      </div>
+
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div className="space-y-2">
+          <label className="text-sm font-medium flex items-center gap-2">
+            <IoLocationOutline className="text-purple-500" />
+            Location
+          </label>
+          <Input
+            name="location"
+            placeholder="Event Location"
+            value={formData.location}
+            onChange={handleChange}
+            className="bg-[#2A2A2F] border-2 border-purple-500/30 text-white placeholder:text-gray-400
+              focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+          />
+          {errors.location && <p className="text-sm text-red-400">{errors.location}</p>}
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-medium flex items-center gap-2">
+            <BsPersonCircle className="text-purple-500" />
+            Organizer Name
+          </label>
+          <Input
+            name="organizer"
+            placeholder="Organizer Name"
+            value={formData.organizer}
+            onChange={handleChange}
+            className="bg-[#2A2A2F] border-2 border-purple-500/30 text-white placeholder:text-gray-400
+              focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+          />
+          {errors.organizer && <p className="text-sm text-red-400">{errors.organizer}</p>}
+        </div>
+      </div>
+
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div className="space-y-2">
+          <label className="text-sm font-medium flex items-center gap-2">
+            <BsClock className="text-purple-500" />
+            Event Time
+          </label>
+          <Input
+            type="time"
+            name="time"
+            value={formData.time}
+            onChange={handleChange}
+            className="bg-[#2A2A2F] border-2 border-purple-500/30 text-white placeholder:text-gray-400
+              focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+          />
+          {errors.time && <p className="text-sm text-red-400">{errors.time}</p>}
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-medium flex items-center gap-2">
+            <FaRegClock className="text-purple-500" />
+            Duration
+          </label>
+          <Input
+            name="duration"
+            placeholder="e.g. 2 hours"
+            value={formData.duration}
+            onChange={handleChange}
+            className="bg-[#2A2A2F] border-2 border-purple-500/30 text-white placeholder:text-gray-400
+              focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+          />
+          {errors.duration && <p className="text-sm text-red-400">{errors.duration}</p>}
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -14,6 +15,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // Conditionally initialize analytics
 let analytics = null;
@@ -24,4 +26,4 @@ if (typeof window !== 'undefined') {
 
 const googleProvider = new GoogleAuthProvider();
 
-export { app, auth, analytics, googleProvider };
+export { app, auth, analytics, googleProvider, db };
