@@ -1,4 +1,5 @@
-import React from "react"
+'use client';
+import React, { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import BackgroundAnimation from "./ui/BackgroundAnimation"
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -16,6 +17,11 @@ const Hero = () => {
       router.push('/signin')
     }
   }
+
+  useEffect(() => {
+    // Put any window-dependent code here
+    // This will only run on the client side
+  }, []);
 
   return (
     <div className="bg-black py-12 sm:py-16 md:py-20 lg:py-24 relative overflow-hidden">

@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, isSupported } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
@@ -13,8 +13,15 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const auth = getAuth(app);
+
+// Conditionally initialize analytics
+let analytics = null;
+if (typeof window !== 'undefined') {
+  // Only initialize analytics on the client side
+  isSupported().then(yes => yes && (analytics = getAnalytics(app)));
+}
+
 const googleProvider = new GoogleAuthProvider();
 
-export { app, analytics, auth, googleProvider };
+export { app, auth, analytics, googleProvider };
