@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import { FaCalendarAlt, FaUsers, FaMapMarkerAlt, FaRegClock } from 'react-icons/fa'
 import { MdDescription, MdGroups } from 'react-icons/md'
 import { IoTimeOutline, IoLocationOutline } from 'react-icons/io5'
@@ -8,7 +8,8 @@ import Link from 'next/link'
 import BackgroundAnimation from '@/components/ui/BackgroundAnimation'
 import { useSearchParams } from 'next/navigation'
 
-export default function EventDetails() {
+// Create a separate component for the content that uses useSearchParams
+function EventDetailsContent() {
   const searchParams = useSearchParams();
   const [eventDetails, setEventDetails] = useState({
     eventName: "",
@@ -174,4 +175,20 @@ export default function EventDetails() {
       </div>
     </div>
   )
+}
+
+// Main component wrapped with Suspense
+export default function EventDetails() {
+  return (
+    <div className="min-h-screen bg-[#0A0A0F] text-white py-8">
+      <BackgroundAnimation />
+      <Suspense fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
+        </div>
+      }>
+        <EventDetailsContent />
+      </Suspense>
+    </div>
+  );
 }
