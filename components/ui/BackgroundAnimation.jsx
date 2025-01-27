@@ -31,7 +31,8 @@ const BackgroundAnimation = () => {
         return (
           <motion.div
             key={i}
-            className="absolute text-green-600"
+            className="absolute"
+            style={{ color: '#00FF00', filter: 'brightness(2)' }}
             initial={{
               x: isBrowser ? Math.random() * window.innerWidth : 0,
               y: isBrowser ? Math.random() * window.innerHeight : 0,
