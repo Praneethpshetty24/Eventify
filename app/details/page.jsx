@@ -7,10 +7,17 @@ import { BsPersonCircle } from 'react-icons/bs'
 import Link from 'next/link'
 import BackgroundAnimation from '@/components/ui/BackgroundAnimation'
 import { useSearchParams, useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 
 import { db, auth } from '@/firebase'
 import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore'
 import SuccessPopup from './components/SuccessPopup'
+
+// Dynamically import the Map component with no SSR
+const Map = dynamic(
+  () => import('./components/Map'),
+  { ssr: false }
+)
 
 // Create a separate component for the content that uses useSearchParams
 function EventDetailsContent() {
@@ -148,11 +155,9 @@ function EventDetailsContent() {
         {/* Event Title Card */}
         <div className="bg-[#1E1E24] p-8 rounded-2xl border border-purple-500/20 mb-8 shadow-lg">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Placeholder for image */}
-            <div className="relative h-[300px] lg:h-[400px] rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/10 to-indigo-500/10 flex items-center justify-center">
-              <div className="text-gray-400">
-                Event Image Placeholder
-              </div>
+            {/* Pass location to Map component */}
+            <div className="relative h-[300px] lg:h-[400px] rounded-xl overflow-hidden">
+              <Map location={eventDetails.location} />
             </div>
 
             {/* Event Info */}
@@ -193,14 +198,7 @@ function EventDetailsContent() {
                     'Register as Volunteer'
                   )}
                 </button>
-                <Link href="/volunteer" 
-                  className="flex-1 bg-[#2A2A2F] text-white font-semibold py-4 px-6 rounded-xl
-                    transition duration-300 ease-in-out transform hover:scale-[1.02] text-center
-                    border border-purple-500/20 hover:bg-[#2A2A2F]/80 text-lg
-                    flex items-center justify-center gap-2">
-                  <MdGroups className="text-xl text-purple-500" />
-                  View Volunteers
-                </Link>
+              
               </div>
             </div>
           </div>
