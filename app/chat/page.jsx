@@ -1,11 +1,12 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { FaPaperPlane } from 'react-icons/fa'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { db, auth } from '@/firebase'
 import { collection, query, where, orderBy, addDoc, onSnapshot, serverTimestamp } from 'firebase/firestore'
 
-export default function ChatPage() {
+// Create a separate component for content that uses useSearchParams
+function ChatContent() {
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(true)
@@ -144,5 +145,18 @@ export default function ChatPage() {
         </form>
       </div>
     </div>
+  )
+}
+
+// Main component wrapped with Suspense
+export default function ChatPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen bg-[#0A0A0F]">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
+      </div>
+    }>
+      <ChatContent />
+    </Suspense>
   )
 }
