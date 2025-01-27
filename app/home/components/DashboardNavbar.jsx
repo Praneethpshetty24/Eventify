@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FaBell, FaUser, FaPlus } from "react-icons/fa";
+import { FaBell, FaUser, FaPlus, FaCalendarAlt, FaRupeeSign } from "react-icons/fa";
 
 const DashboardNavbar = () => {
   return (
@@ -9,6 +9,7 @@ const DashboardNavbar = () => {
       <div className="container mx-auto px-3 sm:px-4">
         <div className="flex justify-between items-center h-14 sm:h-16">
           <Link href="/" className="flex items-center">
+            <FaCalendarAlt className="text-lg sm:text-xl text-violet-400 mr-2" />
             <span className="text-lg sm:text-xl font-bold text-violet-400">Eventify</span>
           </Link>
 
@@ -28,7 +29,7 @@ const DashboardNavbar = () => {
               onClick={() => window.location.href = '/fund'}
               title="Fund your event"
             >
-              <FaBell className="text-lg sm:text-xl" />
+              <FaRupeeSign className="text-lg sm:text-xl" />
             </motion.button>
             
             <Link href="/profile">
