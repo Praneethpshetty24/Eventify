@@ -21,7 +21,6 @@ export default function EventForm() {
     panNumber: "",
     eventName: "",
     description: "",
-    imageUrl: "",
     requiredMembers: 1,
     startDate: null,
     endDate: null,
@@ -147,22 +146,6 @@ export default function EventForm() {
         />
         {errors.description && <p className="text-sm text-red-400">{errors.description}</p>}
         <p className="text-sm text-gray-400">Provide detailed information about your event</p>
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium flex items-center gap-2">
-          <FaImage className="text-purple-500" />
-          Event Image URL
-        </label>
-        <Input
-          name="imageUrl"
-          placeholder="https://example.com/event-image.jpg"
-          value={formData.imageUrl}
-          onChange={handleChange}
-          className="bg-[#2A2A2F] border-2 border-purple-500/30 text-white placeholder:text-gray-400
-            focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
-        />
-        <p className="text-sm text-gray-400">Add an image URL for your event (optional)</p>
       </div>
 
       <div className="space-y-2">

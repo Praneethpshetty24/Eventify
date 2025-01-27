@@ -60,7 +60,7 @@ const UpcomingEvents = () => {
             whileHover={{ x: 5 }}
             onClick={() => router.push('/events')}
           >
-            View All <FaArrowRight className="ml-2" />
+          
           </motion.button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

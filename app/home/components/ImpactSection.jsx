@@ -1,7 +1,10 @@
-import React from "react"
+'use client'
+import React, { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { FaClock, FaUsers, FaStar } from "react-icons/fa"
+import { FaClock, FaCalendarCheck } from "react-icons/fa"
 import BackgroundAnimation from '@/components/ui/BackgroundAnimation'
+import { db, auth } from '@/firebase'
+import { collection, query, where, getDocs } from 'firebase/firestore'
 
 const ImpactCard = ({ icon: Icon, value, label }) => (
   <motion.div
@@ -16,11 +19,53 @@ const ImpactCard = ({ icon: Icon, value, label }) => (
 )
 
 const ImpactSection = () => {
-  const stats = [
-    { icon: FaClock, value: "120+", label: "Hours Volunteered" },
-    { icon: FaUsers, value: "15", label: "Events Completed" },
-    { icon: FaStar, value: "250", label: "Credits Earned" },
-  ]
+  const [stats, setStats] = useState([
+    { icon: FaClock, value: "0", label: "Hours Committed" },
+    { icon: FaCalendarCheck, value: "0", label: "Total Registrations" },
+  ])
+
+  useEffect(() => {
+    const fetchUserStats = async () => {
+      try {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const registrationsRef = collection(db, 'registrations');
+        const userRegistrationsQuery = query(
+          registrationsRef,
+          where('userId', '==', user.uid)
+        );
+        
+        const snapshot = await getDocs(userRegistrationsQuery);
+        
+        let totalEvents = 0;
+        let totalHours = 0;
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          totalEvents++;
+
+          // Add duration if it exists
+          if (data.duration) {
+            const hours = parseInt(data.duration);
+            if (!isNaN(hours)) {
+              totalHours += hours;
+            }
+          }
+        });
+
+        setStats([
+          { icon: FaClock, value: `${totalHours}`, label: "Hours Committed" },
+          { icon: FaCalendarCheck, value: totalEvents.toString(), label: "Total Registrations" },
+        ]);
+
+      } catch (error) {
+        console.error("Error fetching user stats:", error);
+      }
+    };
+
+    fetchUserStats();
+  }, []);
 
   return (
     <section className="bg-[#0A0A0F] py-6 sm:py-12 relative">
@@ -28,7 +73,7 @@ const ImpactSection = () => {
       
       <div className="container mx-auto px-3 sm:px-4 relative">
         <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-white text-center">Your Impact</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-2xl mx-auto">
           {stats.map((stat, index) => (
             <ImpactCard key={index} {...stat} />
           ))}
