@@ -1,41 +1,85 @@
 'use client'
-import React, { useState } from 'react'
-import { FaUserCircle, FaPaperPlane, FaSmile } from 'react-icons/fa'
+import React, { useState, useEffect } from 'react'
+import { FaPaperPlane } from 'react-icons/fa'
+import { useSearchParams, useRouter } from 'next/navigation'
+import { db, auth } from '@/firebase'
+import { collection, query, where, orderBy, addDoc, onSnapshot, serverTimestamp } from 'firebase/firestore'
 
 export default function ChatPage() {
   const [message, setMessage] = useState('')
+  const [messages, setMessages] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  
+  const eventId = searchParams.get('eventId')
+  const eventName = searchParams.get('eventName')
 
-  // Dummy chat data
-  const messages = [
-    {
-      id: 1,
-      sender: "John Doe",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
-      message: "Hey everyone! Looking forward to the tree planting event!",
-      timestamp: "10:30 AM"
-    },
-    {
-      id: 2,
-      sender: "Sarah Wilson",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
-      message: "Me too! Does anyone know if we need to bring our own tools?",
-      timestamp: "10:32 AM"
-    },
-    {
-      id: 3,
-      sender: "Mike Johnson",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mike",
-      message: "The organizers will provide all necessary equipment. We just need to bring water and enthusiasm! 😊",
-      timestamp: "10:35 AM"
+  useEffect(() => {
+    if (!eventId) {
+      router.push('/home')
+      return
     }
-  ]
 
-  const handleSend = (e) => {
+    if (!auth.currentUser) {
+      router.push('/login')
+      return
+    }
+
+    // Subscribe to messages for this specific event
+    const messagesRef = collection(db, 'chats')
+    const q = query(
+      messagesRef,
+      where('eventId', '==', eventId),
+      orderBy('timestamp', 'asc')
+    )
+
+    const unsubscribe = onSnapshot(q, 
+      (snapshot) => {
+        const newMessages = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        setMessages(newMessages)
+        setLoading(false)
+      },
+      (err) => {
+        console.error('Error fetching messages:', err)
+        setError('Failed to load messages. Please try again later.')
+        setLoading(false)
+      }
+    )
+
+    return () => unsubscribe()
+  }, [eventId, router])
+
+  const handleSend = async (e) => {
     e.preventDefault()
-    if (message.trim()) {
-      console.log('Sending message:', message)
+    if (!message.trim() || !auth.currentUser) return
+
+    try {
+      const messagesRef = collection(db, 'chats')
+      await addDoc(messagesRef, {
+        eventId,
+        message: message.trim(),
+        sender: auth.currentUser.displayName || 'Anonymous',
+        senderId: auth.currentUser.uid,
+        timestamp: serverTimestamp(),
+      })
       setMessage('')
+    } catch (error) {
+      console.error('Error sending message:', error)
+      alert('Failed to send message. Please try again.')
     }
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#0A0A0F] text-white flex items-center justify-center">
+        <p className="text-red-500">{error}</p>
+      </div>
+    )
   }
 
   return (
@@ -44,27 +88,34 @@ export default function ChatPage() {
         {/* Chat Header */}
         <div className="bg-[#1A1A1F] border-b border-purple-500/20 p-4">
           <h1 className="text-xl font-bold">Event Chat</h1>
-          <p className="text-sm text-gray-400">Tree Planting Drive</p>
+          <p className="text-sm text-gray-400">{eventName}</p>
         </div>
 
         {/* Messages Area */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.map((msg) => (
-            <div key={msg.id} className="flex items-start gap-3">
-              <img 
-                src={msg.avatar}
-                alt={msg.sender}
-                className="w-10 h-10 rounded-full border border-purple-500/30"
-              />
-              <div className="flex-1">
-                <div className="flex items-baseline gap-2">
-                  <span className="font-semibold">{msg.sender}</span>
-                  <span className="text-xs text-gray-500">{msg.timestamp}</span>
-                </div>
-                <p className="text-gray-300 mt-1">{msg.message}</p>
-              </div>
+          {loading ? (
+            <div className="flex justify-center items-center h-full">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-purple-500"></div>
             </div>
-          ))}
+          ) : messages.length === 0 ? (
+            <div className="text-center text-gray-400">
+              No messages yet. Start the conversation!
+            </div>
+          ) : (
+            messages.map((msg) => (
+              <div key={msg.id} className="flex items-start gap-3">
+                <div className="flex-1">
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-semibold">{msg.sender}</span>
+                    <span className="text-xs text-gray-500">
+                      {msg.timestamp?.toDate().toLocaleTimeString()}
+                    </span>
+                  </div>
+                  <p className="text-gray-300 mt-1">{msg.message}</p>
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Message Input */}
@@ -80,9 +131,11 @@ export default function ChatPage() {
             />
             <button
               type="submit"
+              disabled={!message.trim()}
               className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 rounded-xl
                 transition duration-300 ease-in-out transform hover:scale-[1.02]
-                hover:from-purple-700 hover:to-indigo-700 flex items-center gap-2"
+                hover:from-purple-700 hover:to-indigo-700 flex items-center gap-2
+                disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <FaPaperPlane />
               Send

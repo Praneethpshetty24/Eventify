@@ -5,6 +5,7 @@ import BackgroundAnimation from '@/components/ui/BackgroundAnimation'
 import { db, auth } from '@/firebase'
 import { collection, query, where, getDocs } from 'firebase/firestore'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 const EnrolledEvents = () => {
   const [enrolledEvents, setEnrolledEvents] = useState([]);
@@ -112,6 +113,7 @@ const EnrolledEvents = () => {
               <EventCard 
                 key={event.registrationId}
                 {...event}
+                chatLink={`/chat?eventId=${event.id}&eventName=${encodeURIComponent(event.title)}`}
               />
             ))}
           </div>
