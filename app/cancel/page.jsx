@@ -31,7 +31,7 @@ export default function PaymentError() {
           }}
           className="flex justify-center"
         >
-          <XCircle className="w-24 h-24 text-purple-500/80" />
+          <XCircle className="w-24 h-24 text-red-500/80" />
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -40,10 +40,10 @@ export default function PaymentError() {
           className="mt-6"
         >
           <h1 className="text-3xl font-bold text-white mb-2">
-            Registration Canceled
+            Canceled
           </h1>
           <p className="text-gray-400 mb-4">
-            Your registration was not completed
+            Please try again 
           </p>
           <p className="text-gray-500 text-sm">
             Redirecting to Home page...

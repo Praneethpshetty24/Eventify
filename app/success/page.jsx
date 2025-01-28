@@ -31,7 +31,7 @@ export default function PaymentSuccess() {
           }}
           className="flex justify-center"
         >
-          <CheckCircle className="w-24 h-24 text-purple-500" />
+          <CheckCircle className="w-24 h-24 text-green-500" />
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -40,10 +40,10 @@ export default function PaymentSuccess() {
           className="mt-6"
         >
           <h1 className="text-3xl font-bold text-white mb-2">
-            Registration Successful!
+            Successful!
           </h1>
           <p className="text-gray-400 mb-4">
-            You're all set for the event
+            Thank you for your Funding!
           </p>
           <p className="text-gray-500 text-sm">
             Redirecting to Home page...

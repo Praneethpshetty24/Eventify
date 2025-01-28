@@ -13,13 +13,13 @@ import { db, auth } from '@/firebase'
 import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore'
 import SuccessPopup from './components/SuccessPopup'
 
-// Dynamically import the Map component with no SSR
+
 const Map = dynamic(
   () => import('./components/Map'),
   { ssr: false }
 )
 
-// Create a separate component for the content that uses useSearchParams
+
 function EventDetailsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -152,7 +152,6 @@ function EventDetailsContent() {
           </h1>
         </div>
 
-        {/* Event Title Card */}
         <div className="bg-[#1E1E24] p-8 rounded-2xl border border-purple-500/20 mb-8 shadow-lg">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Pass location to Map component */}
@@ -160,7 +159,7 @@ function EventDetailsContent() {
               <Map location={eventDetails.location} />
             </div>
 
-            {/* Event Info */}
+           
             <div className="flex flex-col justify-between">
               <div>
                 <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
@@ -178,7 +177,7 @@ function EventDetailsContent() {
                 </div>
               </div>
 
-              {/* Action Buttons */}
+             
               <div className="flex flex-col sm:flex-row gap-4 mt-4">
                 <button 
                   onClick={handleRegistration}
@@ -205,9 +204,9 @@ function EventDetailsContent() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column */}
+        
           <div className="lg:col-span-2 space-y-8">
-            {/* Quick Info Cards */}
+        
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-[#1E1E24] p-6 rounded-xl border border-purple-500/20 shadow-lg">
                 <div className="flex items-center gap-3 mb-2">
@@ -229,7 +228,7 @@ function EventDetailsContent() {
               </div>
             </div>
 
-            {/* Description Section */}
+         
             <div className="bg-[#1E1E24] p-8 rounded-xl border border-purple-500/20 shadow-lg">
               <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <MdDescription className="text-purple-500" />
@@ -241,7 +240,7 @@ function EventDetailsContent() {
             </div>
           </div>
 
-          {/* Right Column - Schedule */}
+        
           <div>
             <div className="bg-[#1E1E24] p-8 rounded-xl border border-purple-500/20 sticky top-8 shadow-lg">
               <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
