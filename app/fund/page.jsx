@@ -91,13 +91,13 @@ function FundPage() {
               
               <div className="mt-4 grid grid-cols-3 gap-2">
                 <div className="flex items-center justify-center bg-[#2A2A2F] p-2 rounded-lg">
-                  <img src="/visa.png" alt="visa" className="h-6 opacity-50 hover:opacity-100 transition-opacity" />
+                  <span role="img" aria-label="Visa" className="text-2xl">💳</span>
                 </div>
                 <div className="flex items-center justify-center bg-[#2A2A2F] p-2 rounded-lg">
-                  <img src="/mastercard.png" alt="mastercard" className="h-6 opacity-50 hover:opacity-100 transition-opacity" />
+                  <span role="img" aria-label="MasterCard" className="text-2xl">🟡🔴</span>
                 </div>
                 <div className="flex items-center justify-center bg-[#2A2A2F] p-2 rounded-lg">
-                  <img src="/upi.png" alt="upi" className="h-6 opacity-50 hover:opacity-100 transition-opacity" />
+                  <span role="img" aria-label="UPI" className="text-2xl">📱</span>
                 </div>
               </div>
             </div>
