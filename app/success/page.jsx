@@ -42,7 +42,7 @@ export default function PaymentSuccess() {
             className="mt-6"
           >
             <h1 className="text-3xl font-bold text-white mb-2">
-              Successful!
+              Successful!!
             </h1>
             <p className="text-gray-400 mb-4">
               Thank you for your Funding!
