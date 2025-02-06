@@ -7,6 +7,7 @@ import { FaGoogle } from 'react-icons/fa';
 import { HiCalendar, HiSparkles } from 'react-icons/hi';
 import BackgroundAnimation from '@/components/ui/BackgroundAnimation';
 import { motion } from 'framer-motion';
+import { sendWelcomeEmail } from '@/app/utils/emailService';
 
 function SignIn() {
   const router = useRouter();
@@ -15,7 +16,13 @@ function SignIn() {
   const signInWithGoogle = async () => {
     try {
       setLoading(true);
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      
+      // Send welcome email to new users
+      if (result.user?.email) {
+        await sendWelcomeEmail(result.user.email);
+      }
+      
       router.push('/home');
     } catch (error) {
       console.error('Error signing in with Google:', error);
