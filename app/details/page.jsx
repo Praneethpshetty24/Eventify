@@ -8,6 +8,7 @@ import Link from 'next/link'
 import BackgroundAnimation from '@/components/ui/BackgroundAnimation'
 import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
+import RouteGuard from '../components/RouteGuard'
 
 import { db, auth } from '@/firebase'
 import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore'
@@ -291,7 +292,9 @@ export default function EventDetails() {
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
       </div>
     }>
-      <EventDetailsContent />
+      <RouteGuard>
+        <EventDetailsContent />
+      </RouteGuard>
     </Suspense>
   );
 }
