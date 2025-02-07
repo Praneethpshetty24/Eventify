@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import RouteGuard from '../components/RouteGuard';
+import BackgroundAnimation from '@/components/ui/BackgroundAnimation';
 
 export default function TodoPage() {
   const [todos, setTodos] = useState([]);
@@ -93,6 +94,7 @@ export default function TodoPage() {
   return (
     <RouteGuard>
       <div className="min-h-screen bg-[#121212] p-4">
+        <BackgroundAnimation />
         <div className="max-w-2xl mx-auto">
           <h1 className="text-3xl font-bold text-white mb-8">Share Your Thoughts</h1>
           
@@ -105,7 +107,7 @@ export default function TodoPage() {
           
           {/* Input Form */}
           <form onSubmit={handleSubmit} className="mb-8">
-            <div className="bg-[#1E1E1E] rounded-lg p-4">
+            <div className="bg-[#1E1E1E]/95 backdrop-blur-sm rounded-lg p-4">
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
@@ -133,7 +135,7 @@ export default function TodoPage() {
                   key={todo._id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-[#1E1E1E] rounded-lg p-4"
+                  className="bg-[#1E1E1E]/95 backdrop-blur-sm rounded-lg p-4"
                 >
                   <div className="flex justify-between items-start">
                     <p className="text-white">{todo.content}</p>
