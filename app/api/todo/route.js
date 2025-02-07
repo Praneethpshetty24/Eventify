@@ -50,7 +50,7 @@ export async function POST(request) {
   } catch (error) {
     console.error('Error in POST /api/todo:', error);
     return NextResponse.json(
-      { error: 'Failed to add todo: ' + (error.message || 'Unknown error') },
+      { error: error.message || 'Internal Server Error' },
       { status: 500 }
     );
   }
