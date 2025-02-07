@@ -78,6 +78,14 @@ const ImpactSection = () => {
             <ImpactCard key={index} {...stat} />
           ))}
         </div>
+        <div className="flex justify-center mt-6">
+          <button 
+            onClick={() => window.location.href='/todo'} 
+            className="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600"
+          >
+            Share Your Thoughts
+          </button>
+        </div>
       </div>
     </section>
   )
