@@ -101,38 +101,40 @@ export default function TodoPage() {
 
   return (
     <RouteGuard>
-      <div className="min-h-screen bg-[#121212] p-4">
+      <div className="min-h-screen bg-[#121212]">
         <BackgroundAnimation />
         <WarningPopup />
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold text-white mb-8">Share Your Thoughts</h1>
-          
+        
+        {/* Fixed Input Bar at Top */}
+        <div className="sticky top-0 bg-[#121212]/95 backdrop-blur-md border-b border-gray-800 px-4 py-3 z-10">
+          <div className="max-w-2xl mx-auto">
+            <form onSubmit={handleSubmit} className="flex items-center gap-3">
+              <div className="flex-1 bg-[#1E1E1E] rounded-full border border-gray-700">
+                <input
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="What's happening?"
+                  className="w-full bg-transparent text-white placeholder-gray-400 outline-none px-4 py-2 rounded-full"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-full transition-colors disabled:opacity-50 font-medium"
+              >
+                {loading ? 'Posting...' : 'Share'}
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="max-w-2xl mx-auto px-4 py-6">
           {error && (
             <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg mb-4">
               {error}
             </div>
           )}
-          
-          <form onSubmit={handleSubmit} className="mb-8">
-            <div className="bg-[#1E1E1E]/95 backdrop-blur-sm rounded-lg p-4">
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="What's on your mind?"
-                className="w-full bg-transparent text-white placeholder-gray-400 outline-none resize-none"
-                rows="3"
-              />
-              <div className="flex justify-end mt-2">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full transition-colors disabled:opacity-50"
-                >
-                  {loading ? 'Posting...' : 'Post'}
-                </button>
-              </div>
-            </div>
-          </form>
 
           <div className="space-y-4">
             {Array.isArray(todos) && todos.length > 0 ? (
@@ -141,29 +143,44 @@ export default function TodoPage() {
                   key={todo._id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-[#1E1E1E]/95 backdrop-blur-sm rounded-lg p-4"
+                  className="bg-[#1E1E1E] border border-gray-800 rounded-xl p-5 hover:bg-[#252525] transition-colors"
                 >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="text-white">{todo.content}</p>
-                      <p className="text-gray-400 text-sm mt-1">Posted by: {todo.userName}</p>
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center">
+                        <span className="text-white font-medium">
+                          {todo.userName.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="font-medium text-white">{todo.userName}</p>
+                        <p className="text-gray-400 text-sm">
+                          {new Date(todo.createdAt).toLocaleDateString(undefined, {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </p>
+                      </div>
                     </div>
                     <button
                       onClick={() => handleDelete(todo._id)}
-                      className="text-gray-400 hover:text-red-500"
+                      className="text-gray-400 hover:text-red-500 p-2 hover:bg-red-500/10 rounded-full transition-colors"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                       </svg>
                     </button>
                   </div>
-                  <p className="text-gray-400 text-sm mt-2">
-                    {new Date(todo.createdAt).toLocaleDateString()}
-                  </p>
+                  <p className="text-white mt-3 text-lg">{todo.content}</p>
                 </motion.div>
               ))
             ) : (
-              <p className="text-gray-400 text-center">No thoughts shared yet. Be the first!</p>
+              <div className="text-center py-10">
+                <p className="text-gray-400 text-lg">No thoughts shared yet.</p>
+                <p className="text-gray-500">Be the first to share something!</p>
+              </div>
             )}
           </div>
         </div>
