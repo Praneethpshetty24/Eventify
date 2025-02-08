@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import RouteGuard from '../components/RouteGuard';
 import BackgroundAnimation from '@/components/ui/BackgroundAnimation';
 import { auth } from '@/firebase';
+import WarningPopup from './components/WarningPopup';
 
 export default function TodoPage() {
   const [todos, setTodos] = useState([]);
@@ -102,6 +103,7 @@ export default function TodoPage() {
     <RouteGuard>
       <div className="min-h-screen bg-[#121212] p-4">
         <BackgroundAnimation />
+        <WarningPopup />
         <div className="max-w-2xl mx-auto">
           <h1 className="text-3xl font-bold text-white mb-8">Share Your Thoughts</h1>
           
