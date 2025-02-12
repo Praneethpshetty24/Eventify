@@ -105,81 +105,94 @@ export default function TodoPage() {
         <BackgroundAnimation />
         <WarningPopup />
         
-        {/* Fixed Input Bar at Top */}
-        <div className="sticky top-0 bg-[#121212]/95 backdrop-blur-md border-b border-gray-800 px-4 py-3 z-10">
-          <div className="max-w-2xl mx-auto">
-            <form onSubmit={handleSubmit} className="flex items-center gap-3">
-              <div className="flex-1 bg-[#1E1E1E] rounded-full border border-gray-700">
-                <input
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="What's happening?"
-                  className="w-full bg-transparent text-white placeholder-gray-400 outline-none px-4 py-2 rounded-full"
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-full transition-colors disabled:opacity-50 font-medium"
-              >
-                {loading ? 'Posting...' : 'Share'}
-              </button>
-            </form>
+        {/* Header */}
+        <div className="sticky top-0 bg-[#121212]/95 backdrop-blur-md z-20">
+          <div className="max-w-2xl mx-auto px-4 py-3 border-b border-gray-800">
+            <h1 className="text-xl font-bold text-white">Share your thoughts be respectful</h1>
+          </div>
+          
+          {/* Input Bar */}
+          <div className="px-4 py-3 border-b border-gray-800">
+            <div className="max-w-2xl mx-auto">
+              <form onSubmit={handleSubmit} className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center">
+                  <span className="text-white font-medium">
+                    {user?.displayName?.charAt(0).toUpperCase() || 'A'}
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <input
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    placeholder="What's on your mind?"
+                    className="w-full bg-transparent text-xl text-white placeholder-gray-500 outline-none mb-2"
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading || !content.trim()}
+                    className="ml-auto bg-purple-600 hover:bg-purple-700 text-white px-5 py-1.5 rounded-full transition-colors disabled:opacity-50 disabled:hover:bg-purple-600 text-sm font-semibold"
+                  >
+                    {loading ? 'Posting...' : 'Post'}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="max-w-2xl mx-auto px-4 py-6">
+        <div className="max-w-2xl mx-auto">
           {error && (
-            <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg mb-4">
+            <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 m-4 rounded-lg">
               {error}
             </div>
           )}
 
-          <div className="space-y-4">
+          <div>
             {Array.isArray(todos) && todos.length > 0 ? (
               todos.map((todo) => (
                 <motion.div
                   key={todo._id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-[#1E1E1E] border border-gray-800 rounded-xl p-5 hover:bg-[#252525] transition-colors"
+                  className="p-4 border-b border-gray-800 hover:bg-[#1E1E1E] transition-colors"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center">
-                        <span className="text-white font-medium">
-                          {todo.userName.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="font-medium text-white">{todo.userName}</p>
-                        <p className="text-gray-400 text-sm">
-                          {new Date(todo.createdAt).toLocaleDateString(undefined, {
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </p>
-                      </div>
+                  <div className="flex gap-3">
+                    <div className="w-10 h-10 rounded-full bg-purple-600 flex-shrink-0 flex items-center justify-center">
+                      <span className="text-white font-medium">
+                        {todo.userName.charAt(0).toUpperCase()}
+                      </span>
                     </div>
-                    <button
-                      onClick={() => handleDelete(todo._id)}
-                      className="text-gray-400 hover:text-red-500 p-2 hover:bg-red-500/10 rounded-full transition-colors"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                      </svg>
-                    </button>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <p className="font-bold text-white">{todo.userName}</p>
+                          <span className="text-gray-500">·</span>
+                          <p className="text-gray-500 text-sm">
+                            {new Date(todo.createdAt).toLocaleDateString(undefined, {
+                              month: 'short',
+                              day: 'numeric'
+                            })}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => handleDelete(todo._id)}
+                          className="text-gray-500 hover:text-red-500 p-1 hover:bg-red-500/10 rounded-full transition-colors"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                      </div>
+                      <p className="text-white mt-1">{todo.content}</p>
+                    </div>
                   </div>
-                  <p className="text-white mt-3 text-lg">{todo.content}</p>
                 </motion.div>
               ))
             ) : (
               <div className="text-center py-10">
-                <p className="text-gray-400 text-lg">No thoughts shared yet.</p>
-                <p className="text-gray-500">Be the first to share something!</p>
+                <p className="text-gray-400 text-lg">No tweets yet.</p>
+                <p className="text-gray-500">Start the conversation!</p>
               </div>
             )}
           </div>
