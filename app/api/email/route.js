@@ -11,9 +11,30 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// Verify email connection on server start
+try {
+  transporter.verify(function (error, success) {
+    if (error) {
+      console.error('Email configuration error:', error);
+    } else {
+      console.log('Server is ready to send emails');
+    }
+  });
+} catch (error) {
+  console.error('Email verification failed:', error);
+}
+
 export async function POST(request) {
   try {
     const { email } = await request.json();
+
+    // Validate email
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      return NextResponse.json(
+        { error: 'Invalid email address' },
+        { status: 400 }
+      );
+    }
 
     const mailOptions = {
       from: {
@@ -46,10 +67,23 @@ export async function POST(request) {
       `
     };
 
-    await transporter.sendMail(mailOptions);
-    return NextResponse.json({ success: true });
+    // Send email and wait for response
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully:', info.messageId);
+    
+    return NextResponse.json({ 
+      success: true, 
+      messageId: info.messageId 
+    });
   } catch (error) {
-    console.error('Email error:', error);
-    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+    console.error('Detailed email error:', {
+      message: error.message,
+      code: error.code,
+      response: error.response
+    });
+    return NextResponse.json(
+      { error: 'Failed to send email', details: error.message },
+      { status: 500 }
+    );
   }
-} 
+}
