@@ -21,4 +21,4 @@ Eventify is a powerful and user-friendly platform designed to connect users with
 
 ---
 
-Empowering communities through seamless volunteering!
+🌍 *Make an impact, one event at a time!* 🤝
