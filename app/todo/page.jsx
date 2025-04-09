@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import RouteGuard from '../components/RouteGuard';
 import BackgroundAnimation from '@/components/ui/BackgroundAnimation';
@@ -12,6 +12,8 @@ export default function TodoPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [lastFetchTime, setLastFetchTime] = useState(0);
+  const CACHE_DURATION = 30000; // 30 seconds cache duration
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -21,13 +23,20 @@ export default function TodoPage() {
     return () => unsubscribe();
   }, []);
 
-  const fetchTodos = async () => {
+  const fetchTodos = useCallback(async (forceRefresh = false) => {
+    const now = Date.now();
+    // Only fetch if cache is expired or force refresh is requested
+    if (!forceRefresh && now - lastFetchTime < CACHE_DURATION) {
+      return;
+    }
+
     try {
       const response = await fetch('/api/todo');
       const data = await response.json();
       
       if (Array.isArray(data)) {
         setTodos(data);
+        setLastFetchTime(now);
       } else {
         setTodos([]);
         setError('Invalid data format received');
@@ -37,13 +46,16 @@ export default function TodoPage() {
       setTodos([]);
       setError('Failed to fetch todos');
     }
-  };
+  }, [lastFetchTime]);
+
+  // Memoize the todos list to prevent unnecessary re-renders
+  const memoizedTodos = useMemo(() => todos, [todos]);
 
   useEffect(() => {
     fetchTodos();
-  }, []);
+  }, [fetchTodos]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     if (!content.trim()) return;
     
@@ -65,7 +77,7 @@ export default function TodoPage() {
       
       if (response.ok) {
         setContent('');
-        await fetchTodos();
+        await fetchTodos(true); // Force refresh after adding new todo
       } else {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to add todo');
@@ -76,9 +88,9 @@ export default function TodoPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [content, user, fetchTodos]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = useCallback(async (id) => {
     try {
       const response = await fetch('/api/todo', {
         method: 'DELETE',
@@ -89,7 +101,7 @@ export default function TodoPage() {
       });
       
       if (response.ok) {
-        await fetchTodos();
+        await fetchTodos(true); // Force refresh after deletion
       } else {
         throw new Error('Failed to delete todo');
       }
@@ -97,7 +109,7 @@ export default function TodoPage() {
       console.error('Error deleting todo:', error);
       setError('Failed to delete todo');
     }
-  };
+  }, [fetchTodos]);
 
   return (
     <RouteGuard>
