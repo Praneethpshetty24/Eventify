@@ -51,7 +51,7 @@ function FundPage() {
             <div className="space-y-6">
               <div>
                 <label htmlFor="amount" className="block text-sm font-medium text-gray-300 mb-2">
-                  Enter Amount
+                  Enter Amount.
                 </label>
                 <div className="relative mt-1 rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
