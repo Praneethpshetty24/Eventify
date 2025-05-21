@@ -1,6 +1,6 @@
 'use client';
-import { useState } from 'react';
-import { signInWithPopup } from 'firebase/auth';
+import { useState, useEffect } from 'react';
+import { signInWithPopup, signInAnonymously } from 'firebase/auth';
 import { auth, googleProvider } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { FaGoogle } from 'react-icons/fa';
@@ -12,24 +12,46 @@ import { sendWelcomeEmail } from '@/app/utils/emailService';
 function SignIn() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const signInWithGoogle = async () => {
     try {
       setLoading(true);
       const result = await signInWithPopup(auth, googleProvider);
-      
-      // Send welcome email to new users
       if (result.user?.email) {
         await sendWelcomeEmail(result.user.email);
       }
-      
-      router.push('/home');
+      setTimeout(() => router.push('/home'), 100);
     } catch (error) {
-      console.error('Error signing in with Google:', error);
+      console.error('Error signing in with Google:', error.message);
+      alert('Failed to sign in with Google. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+
+  const signInAsGuest = async () => {
+    try {
+      setLoading(true);
+      const result = await signInAnonymously(auth);
+      if (result.user) {
+        setTimeout(() => router.push('/home'), 100);
+      }
+    } catch (error) {
+      console.error('Error signing in as guest:', error.message);
+      alert('Failed to sign in as guest. Please try another method.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-[#0f172a]">
@@ -63,6 +85,15 @@ function SignIn() {
           <span className="font-medium">
             {loading ? 'Signing in...' : 'Continue with Google'}
           </span>
+        </motion.button>
+
+        <motion.button
+          className="w-full mt-4 flex items-center justify-center gap-3 bg-gradient-to-r from-gray-500 to-gray-600 rounded-lg px-6 py-3.5 text-white hover:from-gray-600 hover:to-gray-700 transition-all duration-200 ease-in-out transform hover:scale-[1.02]"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={signInAsGuest}
+        >
+          <span className="font-medium">Continue as Guest</span>
         </motion.button>
 
         <div className="relative my-8">
