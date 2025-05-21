@@ -8,15 +8,21 @@ import { HiCalendar, HiSparkles } from 'react-icons/hi';
 import BackgroundAnimation from '@/components/ui/BackgroundAnimation';
 import { motion } from 'framer-motion';
 import { sendWelcomeEmail } from '@/app/utils/emailService';
+import WarningPopup from './popup';
 
 function SignIn() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    document.body.style.overflow = showWarning ? 'hidden' : 'unset';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showWarning]);
 
   const signInWithGoogle = async () => {
     try {
@@ -34,9 +40,14 @@ function SignIn() {
     }
   };
 
+  const handleGuestSignIn = () => {
+    setShowWarning(true);
+  };
+
   const signInAsGuest = async () => {
     try {
       setLoading(true);
+      setShowWarning(false);
       const result = await signInAnonymously(auth);
       if (result.user) {
         setTimeout(() => router.push('/home'), 100);
@@ -56,6 +67,12 @@ function SignIn() {
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-[#0f172a]">
       <BackgroundAnimation />
+      {mounted && showWarning && (
+        <WarningPopup
+          onCancel={() => setShowWarning(false)}
+          onContinue={signInAsGuest}
+        />
+      )}
       
       <motion.div 
         className="relative z-10 bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-xl w-full max-w-md border border-white/20"
@@ -91,7 +108,7 @@ function SignIn() {
           className="w-full mt-4 flex items-center justify-center gap-3 bg-gradient-to-r from-gray-500 to-gray-600 rounded-lg px-6 py-3.5 text-white hover:from-gray-600 hover:to-gray-700 transition-all duration-200 ease-in-out transform hover:scale-[1.02]"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          onClick={signInAsGuest}
+          onClick={handleGuestSignIn}
         >
           <span className="font-medium">Continue as Guest</span>
         </motion.button>
