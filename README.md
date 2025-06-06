@@ -14,7 +14,7 @@ Eventify is a powerful and user-friendly platform designed to connect users with
 
 ## 🛠️ Tech Stack
 
-- **Backend:** NestJS, Supabase, Firebase, MongoDB
+- **Backend:** Node.js, Supabase, Firebase, MongoDB
 - **Frontend:** React, Next.js
 - **Maps & Location:** Leaflet.js
 - **Payments:** Stripe
