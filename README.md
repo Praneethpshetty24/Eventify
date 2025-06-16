@@ -3,6 +3,7 @@
 Eventify is a powerful and user-friendly platform designed to connect users with NGOs, track their impact, and foster community engagement. Whether you're looking to volunteer, support causes, or manage events, Eventify makes it easy and efficient.
 
 ## 🚀 Features
+https://www.praneethp.xyz/blog/projects/project3 - Detailed Blog
 
 - **📊 Your Impact** – Displays total hours committed and registrations to track contributions.
 - **📝 Social Feed** – Share thoughts, updates, and interact with the community.
